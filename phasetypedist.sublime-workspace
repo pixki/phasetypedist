@@ -7,6 +7,34 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "gamma_example.py",
+			"settings":
+			{
+				"buffer_size": 1418,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "#!/usr/bin/env python\n# -*- coding: utf-8 -*-\n# @Author: pixki\n# @Date:   2015-11-11 12:07:40\n# @Last Modified by:   Jairo Sánchez\n# @Last Modified time: 2015-11-18 14:12:15\n\nimport numpy as np\nfrom scipy.stats import expon, erlang\nimport matplotlib.pyplot as plt\nimport argparse\nimport sys\n\n\nclass hyperexp(rv_continuous):\n\n    \"\"\"An HyperExponential Random Variable		\n    \"\"\"\n\n    def _rvs(self):\n        return\n\n    def _pdf(self):\n        return\n\n    def _ppf(self):\n        return\n\n    \n\n\n\n\ndef main():\n    parser = argparse.ArgumentParser()\n    parser.add_argument('-s', '--stages', type=int, required=False,\n                        help='Etapas de la distribución')\n    parser.add_argument('-l', '--lambdap', type=float, required=True,\n                        help='Parámetro lambda de cada distribución')\n    parser.add_argument('-r', '--runs', type=int, required=True,\n                        help='Ejecuciones a realizar por cada simulación')\n    parser.add_argument('-o', '--output', type=str, required=True,\n                        help='Archivo de salida para la grafica')\n    parser.add_argument('-d', '--dist', type=str, required=True,\n                        choices=['erlang', 'expon', 'hyperexp'],\n                        help='Distribución a emplear para la simulación')\n    args = parser.parse_args()\n    msg = 'Distribución {3} con {0} etapas (lambda={1}) en {2} ejecuciones'\n    print msg.format(args.stages, args.lambdap, args.runs, args.dist)\n    fig, ax = plt.subplots(1, 1)\n    if args.dist in 'erlang':\n        if args.stages <= 0:\n            print 'Error: se necesita un número válido de etapas'\n            sys.exit(1)\n        mean, var, skew, kurt = erlang.stats(args.stages, scale=args.lambdap,\n                                             moments='mvsk')\n        print \"E[X]={0}, var(X)={1}\".format(mean, var)\n        x = np.linspace(erlang.ppf(0.00001, args.stages, scale=args.lambdap),\n                        erlang.ppf(0.99999, args.stages, scale=args.lambdap),\n                        num=1000)\n        rv = erlang(args.stages, scale=args.lambdap)\n        ax.plot(x, rv.pdf(x), 'r-', lw=5, alpha=0.6, label='Erlang PDF')\n        # Generate random numbers with this distribution\n        r = erlang.rvs(args.stages, scale=args.lambdap, size=args.runs)\n        ax.hist(r, bins=20, normed=True, histtype='stepfilled', alpha=0.2)\n    elif args.dist in 'expon':\n        mean, var, skew, kurt = expon.stats(scale=args.lambdap, moments='mvsk')\n        print \"E[X]={0}, var(X)={1}\".format(mean, var)\n        x = np.linspace(expon.ppf(0.00001, scale=args.lambdap),\n                        expon.ppf(0.99999, scale=args.lambdap),\n                        num=1000)\n        rv = expon(scale=args.lambdap)\n        ax.plot(x, rv.pdf(x), 'r-', lw=5, alpha=0.6, label='Exponential PDF')\n        # Generate random numbers with this distribution\n        r = expon.rvs(scale=args.lambdap, size=args.runs)\n        ax.hist(r, bins=20, normed=True, histtype='stepfilled', alpha=0.2)\n    elif args.dist in 'hyperexp':\n        print \"HyperExponential RV\"\n\n    plt.show()\nif __name__ == '__main__':\n    main()\n",
+			"file": "erlang.py",
+			"file_size": 3089,
+			"file_write_time": 130924621300604918,
+			"settings":
+			{
+				"buffer_size": 3122,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "cont_var.py",
+			"settings":
+			{
+				"buffer_size": 105558,
+				"line_ending": "Unix",
+				"name": "#"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -57,7 +85,7 @@
 	},
 	"expanded_folders":
 	[
-		"/home/pixki/Software/phasetypedist"
+		"/home/jairo/Software/phasetypedist"
 	],
 	"file_history":
 	[
@@ -96,8 +124,242 @@
 	"groups":
 	[
 		{
+			"selected": 2,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "gamma_example.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1418,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"c_time":
+							[
+								128,
+								3,
+								99,
+								100,
+								97,
+								116,
+								101,
+								116,
+								105,
+								109,
+								101,
+								10,
+								100,
+								97,
+								116,
+								101,
+								116,
+								105,
+								109,
+								101,
+								10,
+								113,
+								0,
+								67,
+								10,
+								7,
+								223,
+								11,
+								19,
+								21,
+								2,
+								10,
+								0,
+								0,
+								0,
+								113,
+								1,
+								133,
+								113,
+								2,
+								82,
+								113,
+								3,
+								46
+							],
+							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "erlang.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3122,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								491,
+								491
+							]
+						],
+						"settings":
+						{
+							"c_time":
+							[
+								128,
+								3,
+								99,
+								100,
+								97,
+								116,
+								101,
+								116,
+								105,
+								109,
+								101,
+								10,
+								100,
+								97,
+								116,
+								101,
+								116,
+								105,
+								109,
+								101,
+								10,
+								113,
+								0,
+								67,
+								10,
+								7,
+								223,
+								11,
+								19,
+								21,
+								2,
+								10,
+								0,
+								0,
+								0,
+								113,
+								1,
+								133,
+								113,
+								2,
+								82,
+								113,
+								3,
+								46
+							],
+							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": -0.0,
+						"translation.y": 51.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "cont_var.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 105558,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								25536,
+								25536
+							]
+						],
+						"settings":
+						{
+							"auto_name": "#",
+							"c_time":
+							[
+								128,
+								3,
+								99,
+								100,
+								97,
+								116,
+								101,
+								116,
+								105,
+								109,
+								101,
+								10,
+								100,
+								97,
+								116,
+								101,
+								116,
+								105,
+								109,
+								101,
+								10,
+								113,
+								0,
+								67,
+								10,
+								7,
+								223,
+								11,
+								19,
+								21,
+								27,
+								35,
+								0,
+								0,
+								0,
+								113,
+								1,
+								133,
+								113,
+								2,
+								82,
+								113,
+								3,
+								46
+							],
+							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 14731.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
 			]
 		}
 	],
