@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Author: pixki
 # @Date:   2015-11-11 12:07:40
-# @Last Modified by:   jairo
-# @Last Modified time: 2015-11-26 23:00:45
+# @Last Modified by:   Jairo Sánchez
+# @Last Modified time: 2015-12-02 11:51:32
 
 import numpy as np
 from scipy.stats import expon, erlang, rv_continuous
@@ -64,11 +64,18 @@ def main():
                         help='Parámetro lambda de cada distribución')
     parser.add_argument('-r', '--runs', type=int, required=True,
                         help='Ejecuciones a realizar por cada simulación')
-    parser.add_argument('-o', '--output', type=str, required=True,
+    parser.add_argument('-o', '--output', type=str, required=False,
                         help='Archivo de salida para la grafica')
     parser.add_argument('-d', '--dist', type=str, required=True,
                         choices=['erlang', 'expon', 'hyperexp'],
                         help='Distribución a emplear para la simulación')
+    parser.add_argument('--no-graph', required=False,
+                        help='Suprime la salida como gráfica',
+                        dest='graph', action='store_false')
+    parser.add_argument('--graph', required=False,
+                        help='Habilita la salida como gráfica (usar con [-o])',
+                        dest='graph', action='store_true')
+    parser.set_defaults(graph=True)
     args = parser.parse_args()
     msg = 'Distribución {3} con {0} etapas (lambda={1}) en {2} ejecuciones'
     print msg.format(args.stages, args.lambdap, args.runs, args.dist)
@@ -89,6 +96,13 @@ def main():
         # Generate random numbers with this distribution
         r = erlang.rvs(args.stages, scale=lambdap, size=args.runs)
         ax.hist(r, bins=20, normed=True, histtype='stepfilled', alpha=0.2)
+        meanexp = np.mean(r)
+        varexp = np.var(r)
+        print 'Mediaexperimental: {0} MediaAnalitica: {1}'.format(meanexp,
+                                                                  mean)
+        print 'Sigma2_exp: {0} Sigma2_a: {1}'.format(varexp, var)
+        print 'CoV_exp: {0} CoV_a: {1}'.format(np.sqrt(varexp)/meanexp,
+                                               np.sqrt(var)/mean)
     elif args.dist in 'expon':
         lambdap = args.lambdap[0]
         mean, var, skew, kurt = expon.stats(scale=lambdap, moments='mvsk')
@@ -101,16 +115,31 @@ def main():
         # Generate random numbers with this distribution
         r = expon.rvs(scale=lambdap, size=args.runs)
         ax.hist(r, bins=20, normed=True, histtype='stepfilled', alpha=0.2)
+        meanexp = np.mean(r)
+        varexp = np.var(r)
+        print 'Mediaexperimental: {0} MediaAnalitica: {1}'.format(meanexp,
+                                                                  mean)
+        print 'Sigma2_exp: {0} Sigma2_a: {1}'.format(varexp, var)
+        print 'CoV_exp: {0} CoV_a: {1}'.format(np.sqrt(varexp)/meanexp,
+                                               np.sqrt(var)/mean)
     elif args.dist in 'hyperexp':
         print "HyperExponential RV"
         rv = hyperexp(0.1, args.lambdap[0], args.lambdap[1])
         x = np.linspace(0.00000001, 10.99999, num=1000)
         ax.plot(x, rv.pdf(x), 'r-', lw=5, alpha=0.6, label='HyperExp PDF')
         # ax.plot(x, rv.cdf(x), 'b-', lw=2, alpha=0.6, label='HyperExp CDF')
-        vals = rv.rvs(size=args.runs)
-        ax.hist(vals, normed=True, bins=100, range=(0, 11),
+        r = rv.rvs(size=args.runs)
+        ax.hist(r, normed=True, bins=100, range=(0, 11),
                 histtype='stepfilled', alpha=0.2)
+        meanexp = np.mean(r)
+        varexp = np.var(r)
+        print 'Mediaexperimental: {0} MediaAnalitica: {1}'.format(meanexp,
+                                                                  mean)
+        print 'Sigma2_exp: {0} Sigma2_a: {1}'.format(varexp, var)
+        print 'CoV_exp: {0} CoV_a: {1}'.format(np.sqrt(varexp)/meanexp,
+                                               np.sqrt(var)/mean)
+    if args.graph:
+        plt.show()
 
-    plt.show()
 if __name__ == '__main__':
     main()
